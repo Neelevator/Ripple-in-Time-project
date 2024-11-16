@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Horizontal Scrolling</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .scroll-container {
+            display: flex;
+            overflow-x: auto;
+            /* Enables horizontal scrolling */
+            white-space: nowrap;
+            /* Prevents wrapping */
+            scroll-behavior: smooth;
+            /* Smooth scrolling effect */
+            -webkit-overflow-scrolling: touch;
+            /* Enable smooth scrolling for touch devices */
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .item {
+            min-width: 200px;
+            height: 200px;
+            margin: 10px;
+            background-color: #2196F3;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Dynamic Horizontal Scrolling (Add/Remove Items)</h1>
+
+    <!-- Controls for adding/removing items -->
+    <div class="controls">
+        <input type="text" id="itemName" placeholder="Enter item name">
+        <button onclick="addItem()">Add Item</button>
+        <button onclick="removeItem()">Remove Last Item</button>
+    </div>
+
+    <!-- Scroll container to hold the items -->
+    <div class="scroll-container" id="scroll-container">
+        <div class="item">Item 1</div>
+        <div class="item">Item 2</div>
+        <div class="item">Item 3</div>
+        <div class="item">Item 4</div>
+        <div class="item">Item 5</div>
+    </div>
+
+    <script>
+        const scrollContainer = document.getElementById('scroll-container');
+        const itemNameInput = document.getElementById('itemName');
+
+        // Function to add an item
+        function addItem() {
+            const itemName = itemNameInput.value.trim();
+
+            // Check if input is not empty
+            if (itemName === "") {
+                alert("Please enter a valid item name.");
+                return;
+            }
+
+            // Create a new item element
+            const newItem = document.createElement('div');
+            newItem.classList.add('item');
+            newItem.textContent = itemName;
+
+            // Add the new item to the scroll container
+            scrollContainer.appendChild(newItem);
+
+            // Clear the input field after adding
+            itemNameInput.value = "";
+        }
+
+        // Function to remove the last item
+        function removeItem() {
+            const items = scrollContainer.getElementsByClassName('item');
+
+            // Remove the last item if there is one
+            if (items.length > 0) {
+                scrollContainer.removeChild(items[items.length - 1]);
+            } else {
+                alert("No items to remove.");
+            }
+        }
+    </script>
+
+</body>
+
+</html>
