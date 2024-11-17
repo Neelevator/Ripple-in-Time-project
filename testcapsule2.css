@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#landing-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.time-capsule {
+    padding: 20px;
+    margin: 10px;
+    border: 1px solid #000;
+    cursor: pointer;
+    text-align: center;
+}
+
+#time-capsule-container {
+    display: flex;
+    overflow-x: scroll;
+    width: 100%;
+    height: 100vh;
+}
+
+.capsule {
+    min-width: 300px;
+    margin: 10px;
+    background-color: #ccc;
+    padding: 20px;
+    text-align: center;
+}
+
+.greyed-out {
+    color: grey;
+    background-color: lightgrey;
+    pointer-events: none;
+    opacity: 0.5;
+}
