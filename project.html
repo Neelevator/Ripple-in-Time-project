@@ -96,82 +96,186 @@
 
     <!-- Controls for adding/removing items -->
     <div class="controls">
-        <input type="text" id="itemName" placeholder="Enter item name">
-        <button onclick="addItem()">Add Item</button>
-        <button onclick="removeItem()">Remove Last Item</button>
+        <button id="addButton">Add Image</button>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;"/>
+        <button id="removeButton">Remove Last Image</button>
     </div>
 
     <!-- Scroll container to hold the items -->
-    <div class="scroll-container" id="scroll-container">
+    <div class="scroll-container" id="scrollContainer">
         
     </div>
 
     <script>
-        const scrollContainer = document.getElementById('scroll-container');
-        const itemNameInput = document.getElementById('itemName');
 
-        // Function to add an item
-        function addItem() {
-            const itemName = itemNameInput.value.trim();
 
-            // Check if input is not empty
-            if (itemName === "") {
-                alert("Please enter a valid item name.");
+        const API_KEY = "e83b0e52d693a76163bf";
+        const API_SECRET = "9528231c55bed5bde987e757446a90c85ac9eb7fd72669619173c242081db447";
+        const PINATA_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIxMTA5ZmRjZi0wMDU0LTQ5OTctOWFmOC05MWY2NTUyMTkxYjIiLCJlbWFpbCI6Im9mdWNoaWlAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiRlJBMSJ9LHsiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiTllDMSJ9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6ImU4M2IwZTUyZDY5M2E3NjE2M2JmIiwic2NvcGVkS2V5U2VjcmV0IjoiOTUyODIzMWM1NWJlZDViZGU5ODdlNzU3NDQ2YTkwYzg1YWM5ZWI3ZmQ3MjY2OTYxOTE3M2MyNDIwODFkYjQ0NyIsImV4cCI6MTc2MzMzMTQzNn0.f4P55u7yVz7z8lnq6QEhIVcakK2mxqPdKY6vbjxT26c";
+        // Get elements
+        const fileInput = document.getElementById("fileInput");
+        const addButton = document.getElementById("addButton");
+        const removeButton = document.getElementById("removeButton");
+        const scrollContainer = document.getElementById("scrollContainer");
+        import { PinataSDK } from "pinata-web3";
+
+        // Load items from localStorage on page load
+        window.onload = loadItems;
+
+        // Function to add an image
+        addButton.addEventListener("click", () => {
+            // Trigger the file input click
+            fileInput.click();
+        });
+
+        // When a file is selected, upload it to Pinata
+        fileInput.addEventListener("change", async () => {
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select an image file.");
                 return;
             }
 
-            // Create a new item element
-            const newItem = document.createElement('div');
-            newItem.classList.add('item');
-            newItem.textContent = itemName;
+            try {
+                // Upload the image to Pinata
+                const ipfsHash = await uploadToPinata(file);
+                // const ipfsHash = await pinata.upload
+                //     .file(file)
+                //     .group("6e42d801-521d-4a43-a726-546a8442bca1")
+                
 
-            // Add the new item to the scroll container
-            scrollContainer.appendChild(newItem);
-
-            saveItems();
-
-            // Clear the input field after adding
-            itemNameInput.value = "";
-        }
-
-        function saveItems(){
-            const items = Array.from(scrollContainer.getElementsByClassName('item'));
-            const itemNames = items.map(item => item.textContent);
-
-            // Save the item names to localStorage as a JSON string
-            localStorage.setItem('items', JSON.stringify(itemNames));
-        }
-
-        function loadItems() {
-            const savedItems = JSON.parse(localStorage.getItem('items'));
-
-            if (savedItems) {
-                savedItems.forEach(itemName => {
-                    const newItem = document.createElement('div');
-                    newItem.classList.add('item');
-                    newItem.textContent = itemName;
-
-                    // Add each item to the scroll container
-                    scrollContainer.appendChild(newItem);
+                const pinata = new PinataSDK({
+                    pinataJwt: PINATA_JWT,
+                    pinataGateway: "purple-realistic-felidae-700.mypinata.cloud",
                 });
-            }
-        }
+                const group = await pinata.groups.addCids({
+                groupId: "6e42d801-521d-4a43-a726-546a8442bca1",
+                cids: [ipfsHash],
+});
 
-        // Load the saved items when the page is loaded
-        document.addEventListener('DOMContentLoaded', loadItems);
+                // Create a new item element
+                const newItem = document.createElement("div");
+                newItem.classList.add("item");
 
-        // Function to remove the last item
-        function removeItem() {
-            const items = scrollContainer.getElementsByClassName('item');
+                // Create an image element with the IPFS hash
+                const img = document.createElement("img");
+                img.src = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
+                img.style.width = "500px"; // Adjust as needed
+                img.style.height = "500px"; // Adjust as needed
 
-            // Remove the last item if there is one
-            if (items.length > 0) {
-                scrollContainer.removeChild(items[items.length - 1]);
+                newItem.appendChild(img);
+                scrollContainer.appendChild(newItem);
+
+                // Save the new item
                 saveItems();
+            } catch (error) {
+                console.error("Error uploading image:", error);
+                alert("Failed to upload the image. Please try again.");
+            }
+
+            // Clear the file input
+            fileInput.value = "";
+        });
+
+        // Remove the last image
+        removeButton.addEventListener("click", () => {
+            const items = scrollContainer.getElementsByClassName("item");
+
+            if (items.length > 0) {
+                scrollContainer.removeChild(items[items.length - 1]); // Remove the last item
+                saveItems(); // Update localStorage after removal
             } else {
                 alert("No items to remove.");
             }
+        });
+
+        // Upload file to Pinata
+        async function uploadToPinata(file) {
+            const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    pinata_api_key: API_KEY,
+                    pinata_secret_api_key: API_SECRET,
+                },
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Pinata API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.IpfsHash; // save to local storage and pull
         }
+
+        // Save items to localStorage
+        function saveItems() {
+            const items = [];
+            const itemElements = scrollContainer.getElementsByClassName("item");
+
+            for (const item of itemElements) {
+                const img = item.querySelector("img");
+                if (img) {
+                    items.push(img.src);
+
+                }
+            }
+
+            localStorage.setItem("images", JSON.stringify(items));
+        }
+
+        // Load items from localStorage
+        async function loadItems() {
+            // list files, looping over them and then displaying them.
+
+            const fileRequest = await fetch("https://api.pinata.cloud/data/pinList?groupId=6e42d801-521d-4a43-a726-546a8442bca1", {
+                method: "GET",
+                headers: {
+                    pinata_api_key: API_KEY,
+                    pinata_secret_api_key: API_SECRET,
+                },
+            })
+            const fileResponse = await fileRequest.json()
+            const files = fileResponse.rows
+
+            for(const file of files){
+                const newItem = document.createElement("div");
+                newItem.classList.add("item");
+
+                const img = document.createElement("img");
+                img.src = `https://purple-realistic-felidae-700.mypinata.cloud/ipfs/${file.ipfs_pin_hash}`;
+                img.style.width = "200px"; // Adjust as needed
+                img.style.height = "200px"; // Adjust as needed
+
+                img.style.objectFit = "contain";
+
+                newItem.appendChild(img);
+                scrollContainer.appendChild(newItem);
+            }
+            
+            // const savedItems = JSON.parse(localStorage.getItem("images") || "[]");
+
+            // for (const src of savedItems) {
+            //     const newItem = document.createElement("div");
+            //     newItem.classList.add("item");
+
+            //     const img = document.createElement("img");
+            //     img.src = src;
+            //     img.style.width = "500px"; // Adjust as needed
+            //     img.style.height = "500px"; // Adjust as needed
+
+            //     img.style.objectFit = "contain";
+
+            //     newItem.appendChild(img);
+            //     scrollContainer.appendChild(newItem);
+            // }
+        }
+
     </script>
 
 </body>
