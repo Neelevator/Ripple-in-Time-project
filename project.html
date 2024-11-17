@@ -117,7 +117,7 @@
         const addButton = document.getElementById("addButton");
         const removeButton = document.getElementById("removeButton");
         const scrollContainer = document.getElementById("scrollContainer");
-        import { PinataSDK } from "pinata-web3";
+        // import { PinataSDK } from "pinata-web3";
 
         // Load items from localStorage on page load
         window.onload = loadItems;
@@ -145,14 +145,14 @@
                 //     .group("6e42d801-521d-4a43-a726-546a8442bca1")
                 
 
-                const pinata = new PinataSDK({
-                    pinataJwt: PINATA_JWT,
-                    pinataGateway: "purple-realistic-felidae-700.mypinata.cloud",
-                });
-                const group = await pinata.groups.addCids({
-                groupId: "6e42d801-521d-4a43-a726-546a8442bca1",
-                cids: [ipfsHash],
-});
+//                 const pinata = new PinataSDK({
+//                     pinataJwt: PINATA_JWT,
+//                     pinataGateway: "purple-realistic-felidae-700.mypinata.cloud",
+//                 });
+//                 const group = await pinata.groups.addCids({
+//                 groupId: "6e42d801-521d-4a43-a726-546a8442bca1",
+//                 cids: [ipfsHash],
+// });
 
                 // Create a new item element
                 const newItem = document.createElement("div");
