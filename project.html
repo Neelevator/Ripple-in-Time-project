@@ -9,7 +9,7 @@
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
-            background-image: url("images/water\ background.jpg");
+            background-image: url("water background.jpg");
             background-color: #23E6E9;
             background-size: cover;
         }
@@ -31,16 +31,18 @@
             background: linear-gradient(#5fb7ff, #4cff5b);
         }
 
-        .scroll-container::-webkit-scrollbar{
+        .scroll-container::-webkit-scrollbar {
             width: 10px;
             height: 10px;
         }
 
-        .scroll-container::-webkit-scrollbar-thumb{
+        .scroll-container::-webkit-scrollbar-thumb {
             /* background: url("images/water\ background.jpg") no-repeat center; */
             background-color: rgb(255, 255, 255);
-            background-size: cover; /* Ensures the image covers the thumb area */
-            border-radius: 5px; /* Optional: Makes the thumb rounded */
+            background-size: cover;
+            /* Ensures the image covers the thumb area */
+            border-radius: 5px;
+            /* Optional: Makes the thumb rounded */
         }
 
         .item {
@@ -61,27 +63,34 @@
         }
 
         button {
-            background-color: #4caf50; /* Lilypad green color */
+            background-color: #4caf50;
+            /* Lilypad green color */
             color: white;
             border: none;
             padding: 20px 40px;
             font-size: 18px;
             font-weight: bold;
             text-transform: uppercase;
-            border-radius: 50%; /* Rounds the button into a circular shape */
+            border-radius: 50%;
+            /* Rounds the button into a circular shape */
             cursor: pointer;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            /* Slight shadow for depth */
             transition: all 0.3s ease-in-out;
         }
 
-        button:hover{
-            background-color: #00720a; /* Darker green on hover */
-            transform: scale(1.1); /* Slight scale effect on hover */
+        button:hover {
+            background-color: #00720a;
+            /* Darker green on hover */
+            transform: scale(1.1);
+            /* Slight scale effect on hover */
         }
 
-        button:active{
-            transform: scale(1); /* Returns to normal size when clicked */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Smaller shadow on active */
+        button:active {
+            transform: scale(1);
+            /* Returns to normal size when clicked */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Smaller shadow on active */
         }
 
         .controls {
@@ -97,13 +106,13 @@
     <!-- Controls for adding/removing items -->
     <div class="controls">
         <button id="addButton">Add Image</button>
-        <input type="file" id="fileInput" accept="image/*" style="display: none;"/>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" />
         <button id="removeButton">Remove Last Image</button>
     </div>
 
     <!-- Scroll container to hold the items -->
     <div class="scroll-container" id="scrollContainer">
-        
+
     </div>
 
     <script>
@@ -143,16 +152,16 @@
                 // const ipfsHash = await pinata.upload
                 //     .file(file)
                 //     .group("6e42d801-521d-4a43-a726-546a8442bca1")
-                
 
-//                 const pinata = new PinataSDK({
-//                     pinataJwt: PINATA_JWT,
-//                     pinataGateway: "purple-realistic-felidae-700.mypinata.cloud",
-//                 });
-//                 const group = await pinata.groups.addCids({
-//                 groupId: "6e42d801-521d-4a43-a726-546a8442bca1",
-//                 cids: [ipfsHash],
-// });
+
+                //                 const pinata = new PinataSDK({
+                //                     pinataJwt: PINATA_JWT,
+                //                     pinataGateway: "purple-realistic-felidae-700.mypinata.cloud",
+                //                 });
+                //                 const group = await pinata.groups.addCids({
+                //                 groupId: "6e42d801-521d-4a43-a726-546a8442bca1",
+                //                 cids: [ipfsHash],
+                // });
 
                 // Create a new item element
                 const newItem = document.createElement("div");
@@ -243,21 +252,21 @@
             const fileResponse = await fileRequest.json()
             const files = fileResponse.rows
 
-            for(const file of files){
+            for (const file of files) {
                 const newItem = document.createElement("div");
                 newItem.classList.add("item");
 
                 const img = document.createElement("img");
                 img.src = `https://purple-realistic-felidae-700.mypinata.cloud/ipfs/${file.ipfs_pin_hash}`;
-                img.style.width = "200px"; // Adjust as needed
-                img.style.height = "200px"; // Adjust as needed
+                img.style.width = "400px"; // Adjust as needed
+                img.style.height = "400px"; // Adjust as needed
 
                 img.style.objectFit = "contain";
 
                 newItem.appendChild(img);
                 scrollContainer.appendChild(newItem);
             }
-            
+
             // const savedItems = JSON.parse(localStorage.getItem("images") || "[]");
 
             // for (const src of savedItems) {
