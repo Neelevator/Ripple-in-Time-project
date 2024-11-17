@@ -9,6 +9,9 @@
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
+            background-image: url("images/water\ background.jpg");
+            background-color: #23E6E9;
+            background-size: cover;
         }
 
         .scroll-container {
@@ -24,11 +27,25 @@
             border: 1px solid #ccc;
             padding: 10px;
             margin-top: 20px;
+
+            background: linear-gradient(#5fb7ff, #4cff5b);
+        }
+
+        .scroll-container::-webkit-scrollbar{
+            width: 10px;
+            height: 10px;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb{
+            /* background: url("images/water\ background.jpg") no-repeat center; */
+            background-color: rgb(255, 255, 255);
+            background-size: cover; /* Ensures the image covers the thumb area */
+            border-radius: 5px; /* Optional: Makes the thumb rounded */
         }
 
         .item {
-            min-width: 200px;
-            height: 200px;
+            min-width: 500px;
+            min-height: 500px;
             margin: 10px;
             background-color: #2196F3;
             color: white;
@@ -44,10 +61,27 @@
         }
 
         button {
-            padding: 10px;
-            margin: 10px;
-            font-size: 16px;
+            background-color: #4caf50; /* Lilypad green color */
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 50%; /* Rounds the button into a circular shape */
             cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+            transition: all 0.3s ease-in-out;
+        }
+
+        button:hover{
+            background-color: #00720a; /* Darker green on hover */
+            transform: scale(1.1); /* Slight scale effect on hover */
+        }
+
+        button:active{
+            transform: scale(1); /* Returns to normal size when clicked */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Smaller shadow on active */
         }
 
         .controls {
@@ -58,7 +92,7 @@
 
 <body>
 
-    <h1>Dynamic Horizontal Scrolling (Add/Remove Items)</h1>
+    <!-- <h1>Dynamic Horizontal Scrolling (Add/Remove Items)</h1> -->
 
     <!-- Controls for adding/removing items -->
     <div class="controls">
@@ -69,11 +103,7 @@
 
     <!-- Scroll container to hold the items -->
     <div class="scroll-container" id="scroll-container">
-        <div class="item">Item 1</div>
-        <div class="item">Item 2</div>
-        <div class="item">Item 3</div>
-        <div class="item">Item 4</div>
-        <div class="item">Item 5</div>
+        
     </div>
 
     <script>
@@ -98,9 +128,37 @@
             // Add the new item to the scroll container
             scrollContainer.appendChild(newItem);
 
+            saveItems();
+
             // Clear the input field after adding
             itemNameInput.value = "";
         }
+
+        function saveItems(){
+            const items = Array.from(scrollContainer.getElementsByClassName('item'));
+            const itemNames = items.map(item => item.textContent);
+
+            // Save the item names to localStorage as a JSON string
+            localStorage.setItem('items', JSON.stringify(itemNames));
+        }
+
+        function loadItems() {
+            const savedItems = JSON.parse(localStorage.getItem('items'));
+
+            if (savedItems) {
+                savedItems.forEach(itemName => {
+                    const newItem = document.createElement('div');
+                    newItem.classList.add('item');
+                    newItem.textContent = itemName;
+
+                    // Add each item to the scroll container
+                    scrollContainer.appendChild(newItem);
+                });
+            }
+        }
+
+        // Load the saved items when the page is loaded
+        document.addEventListener('DOMContentLoaded', loadItems);
 
         // Function to remove the last item
         function removeItem() {
@@ -109,6 +167,7 @@
             // Remove the last item if there is one
             if (items.length > 0) {
                 scrollContainer.removeChild(items[items.length - 1]);
+                saveItems();
             } else {
                 alert("No items to remove.");
             }
