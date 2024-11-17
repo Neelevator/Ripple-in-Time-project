@@ -1,6 +1,6 @@
-{ 
+* {/*is it for everything?*/
     margin: 0;
-    padding 0;
+    padding: 0;
     list-style: none;
     box-sizing: border-box;
 }
@@ -53,8 +53,9 @@ main {
 
 .categories {
     display: flex;
+    justify-content: center;
     gap: 0.7rem;
-    margin: 1rem 0 2rem;
+    /* margin: 1rem 0 2rem; */
     flex-wrap: wrap;
 }
 
@@ -64,6 +65,7 @@ main {
     border-radius: 0.5rem;
     font-size: 0.8rem;
     transition: var(--transition);
+    flex-grow: 1;
 }
 
 .category:hover {
