@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<link rel="stylesheet" href="./group-display.css">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +34,6 @@
         const addButton = document.getElementById("addButton");
         const removeButton = document.getElementById("removeButton");
         const scrollContainer = document.getElementById("scrollContainer");
-        // import { PinataSDK } from "pinata-web3";
 
         // Load items from localStorage on page load
         window.onload = loadItems;
@@ -55,53 +54,31 @@
             }
 
             try {
-                // Upload the image to Pinata
                 const ipfsHash = await uploadToPinata(file);
-                // const ipfsHash = await pinata.upload
-                //     .file(file)
-                //     .group("6e42d801-521d-4a43-a726-546a8442bca1")
-                
-
-//                 const pinata = new PinataSDK({
-//                     pinataJwt: PINATA_JWT,
-//                     pinataGateway: "purple-realistic-felidae-700.mypinata.cloud",
-//                 });
-//                 const group = await pinata.groups.addCids({
-//                 groupId: "6e42d801-521d-4a43-a726-546a8442bca1",
-//                 cids: [ipfsHash],
-// });
-
-                // Create a new item element
                 const newItem = document.createElement("div");
                 newItem.classList.add("item");
 
-                // Create an image element with the IPFS hash
                 const img = document.createElement("img");
                 img.src = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
-                img.style.width = "500px"; // Adjust as needed
-                img.style.height = "500px"; // Adjust as needed
+                img.style.width = "500px";
+                img.style.height = "500px";
 
                 newItem.appendChild(img);
                 scrollContainer.appendChild(newItem);
-
-                // Save the new item
                 saveItems();
             } catch (error) {
                 console.error("Error uploading image:", error);
                 alert("Failed to upload the image. Please try again.");
             }
-
-            // Clear the file input
             fileInput.value = "";
         });
 
-        // Remove the last image
         removeButton.addEventListener("click", () => {
             const items = scrollContainer.getElementsByClassName("item");
 
             if (items.length > 0) {
-                scrollContainer.removeChild(items[items.length - 1]); // Remove the last item
-                saveItems(); // Update localStorage after removal
+                scrollContainer.removeChild(items[items.length - 1]);
+                saveItems();
             } else {
                 alert("No items to remove.");
             }
@@ -127,7 +104,7 @@
             }
 
             const data = await response.json();
-            return data.IpfsHash; // save to local storage and pull
+            return data.IpfsHash;
         }
 
         // Save items to localStorage
@@ -166,8 +143,8 @@
 
                 const img = document.createElement("img");
                 img.src = `https://purple-realistic-felidae-700.mypinata.cloud/ipfs/${file.ipfs_pin_hash}`;
-                img.style.width = "200px"; // Adjust as needed
-                img.style.height = "200px"; // Adjust as needed
+                img.style.width = "500px"; // Adjust as needed
+                img.style.height = "500px"; // Adjust as needed
 
                 img.style.objectFit = "contain";
 

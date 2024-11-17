@@ -37,6 +37,12 @@ body {
       background-position: 0 50%;
    }
 }
+#page-title{
+    background: var(--color-white);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
 img {
     display: block;
     width: 100%;
@@ -75,10 +81,8 @@ main {
 }
 
 .galleries {
-    display: grid;
-    grid-template-columns: 1fr 1fr
-    1fr;
-    gap: 3rem;
+    display: flex; /*change from grid to flex so we can center*/
+
 }
 
 .gallery {
@@ -115,6 +119,10 @@ main {
 .gallery__images-more img {
     aspect-ratio: 5/4;
     border-radius: 0.7rem;
+}
+
+.gallery__images-more div {
+    justify-content: center;
 }
 
 .gallery__info {
